@@ -1,3 +1,17 @@
+# 1. Eventstorming Model
+
+
+
+# 2. Saga (Pub/Sub) 확인 (클러스터에 Kafka 설치 후)
+
+
+# 3. Service Router 설치
+
+
+# 4. Zero downtime Deployment
+
+
+
 # 
 
 ## Model
