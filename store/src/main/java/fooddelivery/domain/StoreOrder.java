@@ -30,28 +30,16 @@ public class StoreOrder {
     private Integer qty;
 
     @PostPersist
-    public void onPostPersist() {
-        Accepted accepted = new Accepted(this);
-        accepted.publishAfterCommit();
-
-        CookStarted cookStarted = new CookStarted(this);
-        cookStarted.publishAfterCommit();
-    }
+    public void onPostPersist() {}
 
     @PrePersist
     public void onPrePersist() {}
 
     @PreUpdate
-    public void onPreUpdate() {
-        CookFinished cookFinished = new CookFinished(this);
-        cookFinished.publishAfterCommit();
-    }
+    public void onPreUpdate() {}
 
     @PreRemove
-    public void onPreRemove() {
-        Rejected rejected = new Rejected(this);
-        rejected.publishAfterCommit();
-    }
+    public void onPreRemove() {}
 
     public static StoreOrderRepository repository() {
         StoreOrderRepository storeOrderRepository = StoreApplication.applicationContext.getBean(
@@ -60,63 +48,73 @@ public class StoreOrder {
         return storeOrderRepository;
     }
 
+    public void finishCook() {
+        if(this.getStatus().equals("조리 시작됨")){
+            this.setStatus("조리 완료됨");
+            repository().save(this);
+            CookFinished cookFinished = new CookFinished(this);
+            cookFinished.publishAfterCommit();
+        }else{
+            throw new RuntimeException("아직 조리 시작하지 않은 주문입니다.");
+        }
+    }
+
+    public void accept() {
+        if(this.getStatus().equals("결제됨")){
+            this.setStatus("주문 승인됨");
+            repository().save(this);
+            Accepted accepted = new Accepted(this);
+            accepted.publishAfterCommit();
+        }else{
+            throw new RuntimeException("아직 결제되지 않은 주문입니다.");
+        }
+    }
+
+    public void reject() {
+        if(this.getStatus().equals("결제됨")){
+            this.setStatus("주문 거절됨");
+            repository().save(this);
+            Rejected rejected = new Rejected(this);
+            rejected.publishAfterCommit();
+        }else{
+            throw new RuntimeException("아직 결제되지 않은 주문입니다.");
+        }
+    }
+
+    public void startcook() {
+        if(this.getStatus().equals("주문 승인됨")){
+            this.setStatus("조리 시작됨");
+            repository().save(this);
+            CookStarted cookStarted = new CookStarted(this);
+            cookStarted.publishAfterCommit();
+        }else{
+            throw new RuntimeException("아직 승인되지 않은 주문입니다.");
+        }
+    }
+
     public static void changeOrderStatus(Paid paid) {
-        /** Example 1:  new item 
-        StoreOrder storeOrder = new StoreOrder();
-        repository().save(storeOrder);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(paid.get???()).ifPresent(storeOrder->{
-            
-            storeOrder // do something
+        repository().findByOrderId(paid.getOrderId()).ifPresent(storeOrder->{
+            storeOrder.setStatus("결제됨");
             repository().save(storeOrder);
-
-
          });
-        */
 
     }
 
-    public static void notifyCancel(OrderCanceled orderCanceled) {
-        /** Example 1:  new item 
-        StoreOrder storeOrder = new StoreOrder();
-        repository().save(storeOrder);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderCanceled.get???()).ifPresent(storeOrder->{
-            
-            storeOrder // do something
+    public static void notifyCancel(OrderCanceled orderCanceled) {        
+        repository().findByOrderId(orderCanceled.getId()).ifPresent(storeOrder->{
+            storeOrder.setStatus("주문 취소됨");
             repository().save(storeOrder);
-
-
          });
-        */
 
     }
 
     public static void copyOrder(OrderPlaced orderPlaced) {
-        /** Example 1:  new item 
         StoreOrder storeOrder = new StoreOrder();
+        storeOrder.setOrderId(orderPlaced.getId());
+        storeOrder.setQty(orderPlaced.getQty());
+        storeOrder.setStatus("주문 생성됨");
+        storeOrder.setFoodId(orderPlaced.getFoodId());
+        storeOrder.setAddress(orderPlaced.getAddress());
         repository().save(storeOrder);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderPlaced.get???()).ifPresent(storeOrder->{
-            
-            storeOrder // do something
-            repository().save(storeOrder);
-
-
-         });
-        */
-
     }
 }
