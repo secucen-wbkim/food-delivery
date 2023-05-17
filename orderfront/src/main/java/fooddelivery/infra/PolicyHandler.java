@@ -41,6 +41,20 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='Paid'"
+    )
+    public void wheneverRejected_UpdateStatus(@Payload Paid paid) {
+        Paid event = paid;
+        System.out.println(
+            "\n\n##### listener UpdateStatus : " + paid + "\n\n"
+        );
+
+        // Sample Logic //
+        Order.updateStatus(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
         condition = "headers['type']=='Rejected'"
     )
     public void wheneverRejected_UpdateStatus(@Payload Rejected rejected) {
