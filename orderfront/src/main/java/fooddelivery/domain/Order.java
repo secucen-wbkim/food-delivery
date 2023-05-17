@@ -74,16 +74,12 @@ public class Order {
 
         */
 
-        /** Example 2:  finding and process
+        //** Example 2:  finding and process
         
-        repository().findById(accepted.get???()).ifPresent(order->{
-            
-            order // do something
+        repository().findById(accepted.getOrderId()).ifPresent(order->{
+            order.setStatus("주문 접수됨");
             repository().save(order);
-
-
          });
-        */
 
     }
 
@@ -94,16 +90,14 @@ public class Order {
 
         */
 
-        /** Example 2:  finding and process
+        //** Example 2:  finding and process
         
-        repository().findById(rejected.get???()).ifPresent(order->{
-            
-            order // do something
+        repository().findById(rejected.getOrderId()).ifPresent(order->{
+            order.setStatus("주문 거절됨");
             repository().save(order);
 
 
          });
-        */
 
     }
 }
