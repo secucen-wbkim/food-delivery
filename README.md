@@ -3,13 +3,27 @@
 
 
 # 2. Saga (Pub/Sub) 확인 (클러스터에 Kafka 설치 후)
+클러스터에 helm으로 kafka를 설치하고 kubenetes/templete.yml 을 apply 하였을 때
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/ac59f858-7177-4321-b2da-ed674eb8ef64)
 
+클러스터에 kafka 클라이언트를 설치하여 접속하고 배달 시작부터 완료까지 수행하여 나타난 메시지들
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/0a91a6fb-b2dc-471e-af92-730ba416f84e)
 
 # 3. Service Router 설치
-
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/ac59f858-7177-4321-b2da-ed674eb8ef64)
 
 # 4. Zero downtime Deployment
+zero downtime을 위해 설정된 redinessProbe(패치시 딜레이와 상태체크를 하여 새로운 pod가 정상적으로 동작할때 패킷을 릴레이)와 livenessProbe(pod가 정상적으로 동작하는지를 주기적으로 체크하여 셀프힐링)
 
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/82408cd3-9761-47bd-a59e-4195660d1d19)
+
+readinessProbe의 동작확인을 위해 kubernetes에 siege pod를 생성하여 주기적으로 서비스 호출
+siege -c1 -t360S -v http://orderfront:8080/orders --delay=1S
+
+readinessProbe 옵션이 없는 orderfront/kubernetes/deployment.yml 를 apply
+
+readinessProbe 옵션이 없을 때 다운타임이 발생
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/dd2f532e-8a8a-47bb-8ef0-af503b0c0a93)
 
 
 # 정상 배달 시나리오
