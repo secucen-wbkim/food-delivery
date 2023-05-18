@@ -1,6 +1,9 @@
 package fooddelivery.domain;
 
 import fooddelivery.domain.*;
+
+import java.util.Optional;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -9,4 +12,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
     path = "notificationLogs"
 )
 public interface NotificationLogRepository
-    extends PagingAndSortingRepository<NotificationLog, Long> {}
+    extends PagingAndSortingRepository<NotificationLog, Long> {
+        Optional<NotificationLog>findByOrderId(Long orderId);
+    }

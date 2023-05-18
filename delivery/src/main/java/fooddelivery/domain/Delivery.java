@@ -24,13 +24,7 @@ public class Delivery {
     private String status;
 
     @PostPersist
-    public void onPostPersist() {
-        Delivered delivered = new Delivered(this);
-        delivered.publishAfterCommit();
-
-        DeliveryStarted deliveryStarted = new DeliveryStarted(this);
-        deliveryStarted.publishAfterCommit();
-    }
+    public void onPostPersist() {}
 
     @PrePersist
     public void onPrePersist() {}
@@ -45,23 +39,33 @@ public class Delivery {
         return deliveryRepository;
     }
 
+    public void accept() {
+        if(this.getStatus().equals("배달 대기중")){
+            this.setStatus("배달중");
+            repository().save(this);
+            DeliveryStarted deliveryStarted = new DeliveryStarted(this);
+            deliveryStarted.publishAfterCommit();
+        }else{
+            throw new RuntimeException("배달 대기상태가 아닌 주문입니다.");
+        }
+    }
+
+    public void completedelivery() {
+        if(this.getStatus().equals("배달중")){
+            this.setStatus("배달 완료");
+            repository().save(this);
+            Delivered delivered = new Delivered(this);
+            delivered.publishAfterCommit();
+        }else{
+            throw new RuntimeException("배달중상태가 아닌 주문입니다.");
+        }
+    }
+
     public static void addDeliveryList(CookFinished cookFinished) {
-        /** Example 1:  new item 
         Delivery delivery = new Delivery();
+        delivery.setOrderId(cookFinished.getOrderId());
+        delivery.setAddress(cookFinished.getAddress());
+        delivery.setStatus("배달 대기중");
         repository().save(delivery);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(cookFinished.get???()).ifPresent(delivery->{
-            
-            delivery // do something
-            repository().save(delivery);
-
-
-         });
-        */
-
     }
 }

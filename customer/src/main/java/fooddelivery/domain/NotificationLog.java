@@ -19,6 +19,8 @@ public class NotificationLog {
 
     private String message;
 
+    private Long orderId;
+
     public static NotificationLogRepository repository() {
         NotificationLogRepository notificationLogRepository = CustomerApplication.applicationContext.getBean(
             NotificationLogRepository.class
@@ -26,123 +28,61 @@ public class NotificationLog {
         return notificationLogRepository;
     }
 
+
+    // 메신저를 통해 알림을 보내는 부분이 들어가야 하는 곳
+    // kakao 메신저 API등을 이용하여 알림 보내는 코드가 짜여져야한다.
+    // 로그만 저장
+
     public static void notifyKakaotalk(Accepted accepted) {
-        /** Example 1:  new item 
-        NotificationLog notificationLog = new NotificationLog();
-        repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(accepted.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
+        repository().findByOrderId(accepted.getOrderId()).ifPresent(notificationLog->{
+            NotificationLog newNotificationLog = new NotificationLog();
+            newNotificationLog.setCustomerId(notificationLog.getCustomerId());
+            newNotificationLog.setMessage(notificationLog.getCustomerId() + "님의 주문이 수락되었습니다.");
+            repository().save(newNotificationLog);
          });
-        */
-
     }
 
     public static void notifyKakaotalk(Rejected rejected) {
-        /** Example 1:  new item 
-        NotificationLog notificationLog = new NotificationLog();
-        repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(rejected.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
+        repository().findByOrderId(rejected.getOrderId()).ifPresent(notificationLog->{
+            NotificationLog newNotificationLog = new NotificationLog();
+            newNotificationLog.setCustomerId(notificationLog.getCustomerId());
+            newNotificationLog.setMessage(notificationLog.getCustomerId() + "님의 주문이 가게 사정으로 인해 거절되었습니다.");
+            repository().save(newNotificationLog);
          });
-        */
-
     }
 
     public static void notifyKakaotalk(OrderPlaced orderPlaced) {
-        /** Example 1:  new item 
         NotificationLog notificationLog = new NotificationLog();
+        notificationLog.setCustomerId(orderPlaced.getCustomerId());
+        notificationLog.setOrderId(orderPlaced.getId());
+        notificationLog.setMessage(orderPlaced.getCustomerId() + "님의 주문이 정상적으로 접수 되었습니다.");
         repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderPlaced.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
-         });
-        */
-
     }
 
     public static void notifyKakaotalk(DeliveryStarted deliveryStarted) {
-        /** Example 1:  new item 
-        NotificationLog notificationLog = new NotificationLog();
-        repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(deliveryStarted.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
+        repository().findByOrderId(deliveryStarted.getOrderId()).ifPresent(notificationLog->{
+            NotificationLog newNotificationLog = new NotificationLog();
+            newNotificationLog.setCustomerId(notificationLog.getCustomerId());
+            newNotificationLog.setMessage(notificationLog.getCustomerId() + "님께서 주문하신 요리의 배달이 시작되었습니다.");
+            repository().save(newNotificationLog);
          });
-        */
-
     }
 
     public static void notifyKakaotalk(Delivered delivered) {
-        /** Example 1:  new item 
-        NotificationLog notificationLog = new NotificationLog();
-        repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(delivered.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
+        repository().findByOrderId(delivered.getOrderId()).ifPresent(notificationLog->{
+            NotificationLog newNotificationLog = new NotificationLog();
+            newNotificationLog.setCustomerId(notificationLog.getCustomerId());
+            newNotificationLog.setMessage(notificationLog.getCustomerId() + "님께서 주문하신 요리의 배달이 완료되었습니다.");
+            repository().save(newNotificationLog);
          });
-        */
-
     }
 
     public static void notifyKakaotalk(OrderCanceled orderCanceled) {
-        /** Example 1:  new item 
-        NotificationLog notificationLog = new NotificationLog();
-        repository().save(notificationLog);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(orderCanceled.get???()).ifPresent(notificationLog->{
-            
-            notificationLog // do something
-            repository().save(notificationLog);
-
-
+        repository().findByOrderId(orderCanceled.getId()).ifPresent(notificationLog->{
+            NotificationLog newNotificationLog = new NotificationLog();
+            newNotificationLog.setCustomerId(notificationLog.getCustomerId());
+            newNotificationLog.setMessage(notificationLog.getCustomerId() + "님의 주문이 취소되었습니다.");
+            repository().save(newNotificationLog);
          });
-        */
-
     }
 }
