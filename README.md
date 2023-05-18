@@ -3,6 +3,8 @@
 
 
 # 2. Saga (Pub/Sub) 확인 (클러스터에 Kafka 설치 후)
+kubenetes의 template.yml을 kubectl로 apply
+
 
 
 # 3. Service Router 설치
@@ -68,6 +70,26 @@ http PUT :8082/storeOrders/3/startcook
 
 주문 취소 (에러발생)
 http DELETE :8081/orders/3
+
+
+# kubenates kafka 설치
+
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install my-kafka bitnami/kafka
+
+kafka 메시지 확인
+kubectl run my-kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r0 --command -- sleep infinity
+kubectl exec --tty -i my-kafka-client -- bash
+
+# CONSUMER:
+kafka-console-consumer.sh --bootstrap-server my-kafka:9092 --topic fooddelivery --from-beginning
+
+
 
 ## Model
 www.msaez.io/#/storming/delivery-foods

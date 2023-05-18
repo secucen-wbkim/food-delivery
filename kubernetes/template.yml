@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: orderfront
-          image: username/orderfront:latest
+          image: secucenwbkim/orderfront:v1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: store
-          image: username/store:latest
+          image: secucenwbkim/store:v1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         - name: delivery
-          image: username/delivery:latest
+          image: secucenwbkim/delivery:v1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -138,7 +138,7 @@ spec:
     spec:
       containers:
         - name: customer
-          image: username/customer:latest
+          image: secucenwbkim/customer:v1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -158,6 +158,29 @@ spec:
             periodSeconds: 5
             failureThreshold: 5
 
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: secucenwbkim/gateway:v1
+          ports:
+            - containerPort: 8080
 
 ---
 
@@ -226,3 +249,18 @@ spec:
   selector:
     app: customer
 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gateway
+  type: LoadBalancer

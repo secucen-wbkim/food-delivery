@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderfront
+  labels:
+    app: orderfront
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderfront
+  template:
+    metadata:
+      labels:
+        app: orderfront
+    spec:
+      containers:
+        - name: orderfront
+          image: secucenwbkim/orderfront:v2
+          ports:
+            - containerPort: 8080
