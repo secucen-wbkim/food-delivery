@@ -1,5 +1,5 @@
 # 1. Eventstorming Model
-![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/c5d9630f-1556-4c3e-b0d1-6591af9525af)
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/111b32fd-6456-40bb-ab97-7fbfd08d551d)
 
 
 # 2. Saga (Pub/Sub) 확인 (클러스터에 Kafka 설치 후)
