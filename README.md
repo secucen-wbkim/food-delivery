@@ -21,6 +21,7 @@ readinessProbe의 동작확인을 위해 kubernetes에 siege pod를 생성하여
 siege -c1 -t360S -v http://orderfront:8080/orders --delay=1S
 
 readinessProbe 옵션이 없는 orderfront/kubernetes/deployment.yml 를 apply
+![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/eebace04-31bd-4a1f-80b3-afefc2e0b761)
 
 readinessProbe 옵션이 없을 때 다운타임이 발생
 ![image](https://github.com/secucen-wbkim/food-delivery/assets/117430227/dd2f532e-8a8a-47bb-8ef0-af503b0c0a93)
